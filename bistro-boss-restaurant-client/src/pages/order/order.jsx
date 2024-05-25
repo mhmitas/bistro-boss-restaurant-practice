@@ -9,6 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import useAuth from '../../hooks/useAuth';
 export const OrderContext = createContext(null)
 import toast, { } from "react-hot-toast";
+import useCart from '../../components/hooks/useCart';
 
 
 const tabs = [
@@ -21,6 +22,8 @@ const tabs = [
 
 
 const Order = () => {
+    const { cartItems, refetch } = useCart()
+    const cartItemIds = cartItems.map(i => i.itemId)
     const { user } = useAuth()
     const [searchParams, setSearchParams] = useSearchParams()
     const category = searchParams.get('category')
@@ -42,10 +45,11 @@ const Order = () => {
         if (data.insertedId) {
             toast.success('Added to the cart')
             console.log(data);
+            refetch()
         }
     }
 
-    const foodCardData = { handleAddToCart }
+    const foodCardData = { handleAddToCart, cartItemIds }
 
     return (
         <div>

@@ -13,7 +13,7 @@ app.use(cors())
 app.use(express.json())
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jt5df8u.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 // `````````Mongodb`````````
@@ -46,6 +46,25 @@ async function run() {
                 limit = parseInt(req.query.limit)
             }
             const result = await menuColl.find(query).limit(limit).toArray()
+            res.send(result)
+        })
+
+        app.get('/carts/:uid', async (req, res) => {
+            const uid = req.params.uid;
+            const query = { userId: uid }
+            const result = await cartColl.find(query).toArray()
+            console.log(result)
+            res.send(result)
+        })
+
+        app.get('/menu/carts/:uid', async (req, res) => {
+            const uid = req.params.uid;
+            console.log(uid, 'er data dao')
+            const query = { userId: uid }
+            const items = await cartColl.find(query).toArray()
+            const itemIds = items.map(item => ObjectId.createFromHexString(item.itemId))
+            const filter = { _id: { $in: itemIds } }
+            const result = await menuColl.find(filter).toArray()
             res.send(result)
         })
 

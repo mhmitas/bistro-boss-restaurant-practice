@@ -1,6 +1,6 @@
 import React from 'react';
 import { navItems } from './Navlinks';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import CartIcon from '../CartIcon/CartIcon';
 
@@ -26,8 +26,9 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                {/* / authentication based UI */}
+                {/* shopping cart icon  */}
                 <CartIcon />
+                {/* / authentication based UI */}
                 <div>
                     {/* login logout */}
                     {authLoading ? <span className=''>Loading...</span> :
@@ -42,6 +43,8 @@ const Navbar = () => {
                                 </div>
                                 <ul tabIndex={0} className="mt-3 z-[1] p-2 menu menu-sm dropdown-content bg-base-100 rounded-md w-52 shadow-xl">
                                     {/* <li><Link to="/profile">Profile</Link></li> */}
+                                    <li><NavLink to="/dashboard">Dashboard</NavLink></li>
+                                    <div className='divider my-0'></div>
                                     <li><span onClick={logOutUser}>Logout</span></li>
                                 </ul>
                             </div>
