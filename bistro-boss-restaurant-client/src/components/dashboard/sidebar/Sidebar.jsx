@@ -4,9 +4,11 @@ import { FaBook, FaCalendar, FaHome, FaList, FaPlus, FaRegCalendarCheck, FaShopp
 import { Link, NavLink } from 'react-router-dom'
 import { MdMenu, MdMenuBook, MdReviews } from "react-icons/md";
 import { ImSpoonKnife } from "react-icons/im";
+import useAuth from '../../../hooks/useAuth';
 
 
 const Sidebar = () => {
+    const { user } = useAuth()
 
     const userNavLinks = <>
         <li>
@@ -43,7 +45,7 @@ const Sidebar = () => {
         </li>
     </>
 
-    let isAdmin = false
+    let isAdmin = true;
 
     return (
         <ul className="menu p-4 lg:w-72 w-60 min-h-full bg-base-300 text-base-content">
@@ -54,6 +56,19 @@ const Sidebar = () => {
                 />
             </label>
             <Link to="/" className="text-2xl p-4 font-semibold cursor-pointer">Bistro Boss</Link>
+            <li>
+                <div className='flex items-center'>
+                    <div className="avatar">
+                        <div className="w-9 rounded-full">
+                            <img src={user?.photoURL} alt="" />
+                        </div>
+                    </div>
+                    <div className='flex flex-col'>
+                        <span>{user?.displayName}</span>
+                        <span className='text-xs'>{user?.email}</span>
+                    </div>
+                </div>
+            </li>
             {
                 isAdmin ?
                     adminNavLinks

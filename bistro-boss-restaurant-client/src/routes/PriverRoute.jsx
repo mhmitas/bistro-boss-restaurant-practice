@@ -4,6 +4,7 @@ import useAuth from '../hooks/useAuth';
 
 const PriverRoute = ({ children }) => {
     const location = useLocation();
+    // console.log(location);
     const { user, authLoading } = useAuth()
 
     if (authLoading) {
@@ -13,7 +14,7 @@ const PriverRoute = ({ children }) => {
     if (user) {
         return children
     }
-    return <Navigate to='/auth/login' state={location.pathname} replace></Navigate>
+    return <Navigate to='/auth/login' state={{ from: location }} replace></Navigate>
 };
 
 export default PriverRoute;

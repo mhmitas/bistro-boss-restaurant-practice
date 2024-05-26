@@ -3,6 +3,8 @@ import useAuth from '../../hooks/useAuth';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { axiosInstance } from '../../components/hooks/useAxios';
+import GoogleSignin from '../../components/common/popup-sign-in/GoogleSignin';
 
 const SignUp = () => {
     const navigate = useNavigate()
@@ -15,14 +17,21 @@ const SignUp = () => {
     } = useForm()
 
     async function onSubmit(formData, e) {
-        console.log(formData);
+        // console.log(formData);
         try {
             const result = await createUser(formData.email, formData.password)
             // update user profile
             await updateUserProfile(formData.userName, formData.photoUrl)
             // Optimistic UI Update
             setUser({ ...result?.user, photoURL: formData.photoUrl, displayName: formData.userName })
-            console.log(result);
+            const userInfo = {
+                user: result.user?.displayName,
+                email: result.user?.email,
+                uid: result.user?.uid
+            }
+            // const postUser
+            const res = await axiosInstance.post('/users', userInfo)
+            res.data?.insertedId && toast.success('sign up success')
             navigate('/')
             reset()
         }
@@ -92,6 +101,12 @@ const SignUp = () => {
                     Login
                 </Link>
             </p>
+            <div className="divider mt-6">Or continue with</div>
+            <div className="form-control">
+                <div className="flex justify-center space-x-2 mt-4">
+                    <GoogleSignin />
+                </div>
+            </div>
         </div>
     );
 };

@@ -4,10 +4,13 @@ import useAuth from '../../hooks/useAuth';
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FaGoogle } from 'react-icons/fa';
 import toast from 'react-hot-toast';
+import GoogleSignin from '../../components/common/popup-sign-in/GoogleSignin';
 
 const Login = () => {
     const location = useLocation()
-    console.log(location.state);
+    // console.log(location.state);
+    const from = location.state?.from?.pathname + location.state?.from?.search
+    // console.log(from);
     const navigate = useNavigate()
     const { loginUser } = useAuth()
     const {
@@ -17,14 +20,15 @@ const Login = () => {
     } = useForm()
 
     const onSubmit = (data) => {
-        console.log(data)
+        // console.log(data)
         loginUser(data.email, data.password)
             .then(result => {
                 // console.log(result.user);
                 toast.success('Login success')
-                navigate(location?.state ? location.state : '/');
+                navigate(from ? from : '/');
             }).catch(err => {
                 console.log(err);
+                toast.error(err?.message.slice(10))
             })
     }
     return (
@@ -60,11 +64,7 @@ const Login = () => {
                         <div className="divider mt-6">Or continue with</div>
                         <div className="form-control">
                             <div className="flex justify-center space-x-2 mt-4">
-                                <button
-                                    onClick={() => handlePopupSignIn(googleProvider)}
-                                    className="btn btn-outline btn-icon btn-google">
-                                    <FaGoogle className='text-xl' /> Google
-                                </button>
+                                <GoogleSignin from={from} />
                             </div>
                         </div>
                     </div>

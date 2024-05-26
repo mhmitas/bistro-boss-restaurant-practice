@@ -11,16 +11,16 @@ const secureAxiosInstance = axios.create({
 
 const useAxiosSecure = () => {
     // Request interceptor
-    secureAxiosInstance.interceptors.request.use(
-        () => {
+    // secureAxiosInstance.interceptors.request.use(
+    //     () => {
 
-        },
-        (err) => {
-            // Do something with request error
-            return Promise.reject(err);
-        }
-    )
-    return
+    //     },
+    //     (err) => {
+    //         // Do something with request error
+    //         return Promise.reject(err);
+    //     }
+    // )
+    return secureAxiosInstance
 };
 
 export default useAxiosSecure;

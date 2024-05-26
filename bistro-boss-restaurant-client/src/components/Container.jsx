@@ -2,7 +2,7 @@ import React from 'react';
 
 const Container = ({ children }) => {
     return (
-        <div className='px-8'>
+        <div className='lg:px-8 px-4'>
             {children}
         </div>
     );

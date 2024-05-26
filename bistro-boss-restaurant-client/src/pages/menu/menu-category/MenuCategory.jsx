@@ -11,7 +11,7 @@ const MenuCategory = ({ title, subTitle, category, image }) => {
     return (
         <div>
             <MenuCover image={image} title={title} description={subTitle}></MenuCover>
-            <div className='grid lg:grid-cols-2 gap-6 my-8'>
+            <div className='grid grid-cols-2 gap-6 my-8'>
                 {
                     menu.slice(0, 4).map(item => <MenuItemCard item={item} key={item._id}></MenuItemCard>)
                 }

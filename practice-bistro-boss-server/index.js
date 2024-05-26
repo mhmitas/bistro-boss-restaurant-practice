@@ -34,7 +34,44 @@ const userColl = database.collection('users')
 
 async function run() {
     try {
-        //  menu related APIs
+        // user related APIs
+        app.get('/users', async (req, res) => {
+            const result = await userColl.find().toArray()
+            res.send(result)
+        })
+
+        app.post('/users', async (req, res) => {
+            // sobsomoy uid khate na;
+            const user = req.body;
+            const query = { email: user?.email }
+            const isExist = await userColl.findOne(query)
+            console.log(isExist)
+            if (isExist) {
+                return res.send({ message: 'user already exists', insertedId: null })
+            }
+            const result = await userColl.insertOne(user);
+            res.send(result)
+        })
+
+        app.patch('/users/admin/:id', async (req, res) => {
+            const id = req.params.id;
+            const doc = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updateDoc = { $set: doc };
+            const result = await userColl.updateOne(filter, updateDoc, options)
+            console.log(result)
+            res.send(result)
+        })
+
+        app.delete('/users/delete/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await userColl.deleteOne(query)
+            res.send(result)
+        })
+
+        //  menu and cart related APIs
         app.get('/menu', async (req, res) => {
             // console.log(req.query)
             let query = {}
@@ -53,13 +90,11 @@ async function run() {
             const uid = req.params.uid;
             const query = { userId: uid }
             const result = await cartColl.find(query).toArray()
-            console.log(result)
             res.send(result)
         })
 
         app.get('/menu/carts/:uid', async (req, res) => {
             const uid = req.params.uid;
-            console.log(uid, 'er data dao')
             const query = { userId: uid }
             const items = await cartColl.find(query).toArray()
             const itemIds = items.map(item => ObjectId.createFromHexString(item.itemId))
@@ -71,6 +106,15 @@ async function run() {
         app.post('/carts', async (req, res) => {
             const item = req.body;
             const result = await cartColl.insertOne(item)
+            res.send(result)
+        })
+
+        // remove items from cart
+        app.delete('/carts/delete/:id', async (req, res) => {
+            const id = req.params.id;
+            // console.log(id)
+            const query = { itemId: id }
+            const result = await cartColl.deleteOne(query)
             res.send(result)
         })
 

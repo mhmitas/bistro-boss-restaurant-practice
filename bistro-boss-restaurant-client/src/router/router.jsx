@@ -9,6 +9,7 @@ import SignUp from "../pages/authentication/SignUp";
 import PriverRoute from "../routes/PriverRoute";
 import DashboardRoutes from "../routes/DashboardRoutes";
 import UserCart from "../pages/Dashboard/user/UserCart";
+import ManageUsers from "../pages/Dashboard/admin/manage-users/ManageUsers";
 
 export const router = createBrowserRouter([
     {
@@ -35,9 +36,15 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         element: <DashboardRoutes />,
         children: [
+            // users routes
             {
                 path: 'cart',
                 element: <UserCart />,
+            },
+            // admin routes
+            {
+                path: 'manage-users',
+                element: <ManageUsers />,
             },
         ]
     },
