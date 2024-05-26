@@ -6,14 +6,13 @@ import FevoriteDishBtn from "../../../components/common/common-buttons/FevoriteD
 
 const MenuCategory = ({ title, subTitle, category, image }) => {
 
-    const [menu] = useMenu(category)
-
+    const [menu] = useMenu(category, 4)
     return (
         <div>
             <MenuCover image={image} title={title} description={subTitle}></MenuCover>
             <div className='grid grid-cols-2 gap-6 my-8'>
                 {
-                    menu.slice(0, 4).map(item => <MenuItemCard item={item} key={item._id}></MenuItemCard>)
+                    menu.map(item => <MenuItemCard item={item} key={item._id}></MenuItemCard>)
                 }
             </div>
             <div className='text-center'>

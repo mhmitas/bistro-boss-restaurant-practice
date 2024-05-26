@@ -1,14 +1,16 @@
 import React from 'react';
 import { RxCross1 } from "react-icons/rx";
-import { FaBook, FaCalendar, FaHome, FaList, FaPlus, FaRegCalendarCheck, FaShoppingCart, FaUsers } from 'react-icons/fa';
+import { FaBook, FaCalendar, FaHome, FaList, FaRegCalendarCheck, FaShoppingCart, FaUsers } from 'react-icons/fa';
 import { Link, NavLink } from 'react-router-dom'
-import { MdMenu, MdMenuBook, MdReviews } from "react-icons/md";
+import { MdMenuBook, MdReviews } from "react-icons/md";
 import { ImSpoonKnife } from "react-icons/im";
+import { useQuery } from '@tanstack/react-query';
+import { axiosInstance } from '../../hooks/useAxios';
 import useAuth from '../../../hooks/useAuth';
 
 
 const Sidebar = () => {
-    const { user } = useAuth()
+    // const { user } = useAuth()
 
     const userNavLinks = <>
         <li>
@@ -45,7 +47,17 @@ const Sidebar = () => {
         </li>
     </>
 
-    let isAdmin = true;
+    // let isAdmin = true;
+    // const [admin, isPending] = useAdmin()
+    const { user } = useAuth()
+    const { data: admin, isPending } = useQuery({
+        queryKey: ['isAdmin', user],
+        queryFn: async () => {
+            const res = await axiosInstance.get(`/users/admin/${user?.uid}`)
+            console.log(res.data);
+            return res.data.admin
+        }
+    })
 
     return (
         <ul className="menu p-4 lg:w-72 w-60 min-h-full bg-base-300 text-base-content">
@@ -56,21 +68,10 @@ const Sidebar = () => {
                 />
             </label>
             <Link to="/" className="text-2xl p-4 font-semibold cursor-pointer">Bistro Boss</Link>
-            <li>
-                <div className='flex items-center'>
-                    <div className="avatar">
-                        <div className="w-9 rounded-full">
-                            <img src={user?.photoURL} alt="" />
-                        </div>
-                    </div>
-                    <div className='flex flex-col'>
-                        <span>{user?.displayName}</span>
-                        <span className='text-xs'>{user?.email}</span>
-                    </div>
-                </div>
-            </li>
-            {
-                isAdmin ?
+            {isPending ?
+                <h3 className='text-xl'>Loading...</h3>
+                :
+                admin ?
                     adminNavLinks
                     :
                     userNavLinks
@@ -89,3 +90,19 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
+/*
+<li className='hidden'>
+    <div className='flex items-center'>
+        <div className="avatar">
+            <div className="w-9 rounded-full">
+                <img src={user?.photoURL} alt="" />
+            </div>
+        </div>
+        <div className='flex flex-col'>
+            <span>{user?.displayName}</span>
+            <span className='text-xs'>{user?.email}</span>
+        </div>
+    </div>
+</li>
+*/

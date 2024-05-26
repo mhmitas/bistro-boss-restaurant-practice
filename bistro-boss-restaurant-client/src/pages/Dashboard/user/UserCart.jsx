@@ -26,7 +26,9 @@ const UserCart = () => {
 
     return (
         <Container>
-            {/* <p>{cartItems.length}</p> */}
+            <div className='flex justify-between my-2'>
+                <h3 className="text-xl text-center ">Cart Itmes</h3>
+            </div>
 
             <div className="overflow-x-auto bg-base-100">
                 <table className="table">

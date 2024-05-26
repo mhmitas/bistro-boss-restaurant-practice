@@ -1,6 +1,7 @@
 const express = require('express')
 require('dotenv').config()
 const cors = require('cors')
+const jwt = require('jsonwebtoken')
 const app = express()
 const port = process.env.PORT || 5000;
 
@@ -34,6 +35,15 @@ const userColl = database.collection('users')
 
 async function run() {
     try {
+        //////////////////////
+        // JWT related APIs
+        app.post('/jwt', async (req, res) => {
+            const user = req.body
+            const token = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '1h' })
+            res.send({ token: token })
+        })
+
+        //////////////////////
         // user related APIs
         app.get('/users', async (req, res) => {
             const result = await userColl.find().toArray()
@@ -45,12 +55,30 @@ async function run() {
             const user = req.body;
             const query = { email: user?.email }
             const isExist = await userColl.findOne(query)
-            console.log(isExist)
+            // console.log('isExist:', isExist)
             if (isExist) {
                 return res.send({ message: 'user already exists', insertedId: null })
             }
             const result = await userColl.insertOne(user);
             res.send(result)
+        })
+
+        app.delete('/users/delete/:id', async (req, res) => {
+            const id = req.params.id
+            const query = { _id: new ObjectId(id) }
+            const result = await userColl.deleteOne(query)
+            res.send(result)
+        })
+
+        ///////////////
+        // Admin related APIs
+        app.get('/users/admin/:uid', async (req, res) => {
+            let admin = false;
+            const uid = req.params.uid;
+            const query = { uid: uid }
+            const result = await userColl.findOne(query)
+            admin = result.role === 'admin'
+            res.send({ admin })
         })
 
         app.patch('/users/admin/:id', async (req, res) => {
@@ -64,13 +92,16 @@ async function run() {
             res.send(result)
         })
 
-        app.delete('/users/delete/:id', async (req, res) => {
-            const id = req.params.id
-            const query = { _id: new ObjectId(id) }
-            const result = await userColl.deleteOne(query)
+        // remove items from cart
+        app.delete('/carts/delete/:id', async (req, res) => {
+            const id = req.params.id;
+            // console.log(id)
+            const query = { itemId: id }
+            const result = await cartColl.deleteOne(query)
             res.send(result)
         })
 
+        ///////////////
         //  menu and cart related APIs
         app.get('/menu', async (req, res) => {
             // console.log(req.query)
@@ -106,15 +137,6 @@ async function run() {
         app.post('/carts', async (req, res) => {
             const item = req.body;
             const result = await cartColl.insertOne(item)
-            res.send(result)
-        })
-
-        // remove items from cart
-        app.delete('/carts/delete/:id', async (req, res) => {
-            const id = req.params.id;
-            // console.log(id)
-            const query = { itemId: id }
-            const result = await cartColl.deleteOne(query)
             res.send(result)
         })
 

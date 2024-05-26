@@ -10,7 +10,7 @@ const CartIcon = () => {
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle mx-4">
                 <div className='indicator'>
                     <FaShoppingCart size={23} />
-                    <span className="indicator-item badge text-lg font-semibold bg-opacity-60">{cartItems.length}</span>
+                    <span className="indicator-item badge text-lg font-semibold text-secondary">{cartItems.length}</span>
                 </div>
             </div>
         </Link>

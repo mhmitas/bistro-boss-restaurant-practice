@@ -36,12 +36,13 @@ const Order = () => {
         }
     })
 
-    async function handleAddToCart(id) {
-        const item = {
-            itemId: id,
-            userId: user.uid
+    async function handleAddToCart(item) {
+        const itemData = {
+            itemId: item._id,
+            userId: user?.uid,
+            userEmail: user?.email
         }
-        const { data } = await axiosInstance.post('/carts', item)
+        const { data } = await axiosInstance.post('/carts', itemData)
         if (data.insertedId) {
             toast.success('Added to the cart')
             console.log(data);

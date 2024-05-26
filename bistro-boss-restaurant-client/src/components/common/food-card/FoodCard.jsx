@@ -10,7 +10,7 @@ const FoodCard = ({ item }) => {
         if (isExists) {
             return toast('Already Exists in cart')
         }
-        handleAddToCart(_id)
+        handleAddToCart(item)
     }
     return (
         <div>

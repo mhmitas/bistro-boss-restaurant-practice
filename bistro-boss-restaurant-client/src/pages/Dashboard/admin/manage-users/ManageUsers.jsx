@@ -1,16 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
-import useAxiosSecure from '../../../../components/hooks/useAxios';
 import Container from '../../../../components/Container';
 import { FaTrashAlt, FaUserAlt } from 'react-icons/fa';
+import { axiosInstance } from '../../../../components/hooks/useAxios';
 
 const ManageUsers = () => {
-    const secureAxiosInstance = useAxiosSecure()
 
     const { data: users = [], isPending, refetch, error } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
-            const { data } = await secureAxiosInstance.get('/users')
+            const { data } = await axiosInstance.get('/users')
             // console.log(data);
             return data
         }
